@@ -1,3 +1,4 @@
+from operator import contains
 import requests
 import streamlit as st
 import json
@@ -8,11 +9,25 @@ response = requests.get("https://api.atlasfreeshard.com/news/all")
 
 json = response.json()
 
-keys = list(json[0].keys())
+st.table(json)
 
-for key in json:
-    if key == 'realm' and 'realm' == 'Albion':
-        print('Alb')
-    else:
-        print('not alb')
+midgard = 0
+albion = 0
+hibernia = 0
 
+for i in json:
+    statline = i.values()
+    if 'RvR' in statline:
+        if 'Midgard' in statline:
+            midgard+= 1
+        elif 'Hibernia' in statline:
+            hibernia+= 1
+        elif 'Albion' in statline:
+            albion+= 1
+print(midgard)
+print(hibernia)
+print(albion)
+
+keeps = pd.Series([midgard,hibernia,albion])
+
+st.bar_chart(keeps)
